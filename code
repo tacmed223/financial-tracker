@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial Tracker Pro</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>💰 Financial Tracker Pro</h1>
+
+    <div class="summary">
+        <div class="card income">
+            <h3>Total Income</h3>
+            <p id="income">$0.00</p>
+        </div>
+
+        <div class="card expenses">
+            <h3>Total Expenses</h3>
+            <p id="expenses">$0.00</p>
+        </div>
+
+        <div class="card balance">
+            <h3>Balance</h3>
+            <p id="balance">$0.00</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h2>Add Transaction</h2>
+
+        <form id="transactionForm">
+            <input type="text" id="description" placeholder="Description" required>
+
+            <input type="number" id="amount" placeholder="Amount" step="0.01" required>
+
+            <input type="date" id="date" required>
+
+            <select id="type">
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+            </select>
+
+            <button type="submit">Add Transaction</button>
+        </form>
+    </div>
+
+    <div class="search-section">
+        <input type="text" id="search" placeholder="Search transactions...">
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody id="transactionTable"></tbody>
+    </table>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
