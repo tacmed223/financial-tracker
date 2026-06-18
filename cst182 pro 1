@@ -5,73 +5,60 @@ const incomeEl = document.getElementById("income-value");
 const expenseEl = document.getElementById("expense-value");
 const balanceEl = document.getElementById("balance-value");
 
-// Store transactions properly (prevents bugs when deleting)
-let transactions = [];
+let income = 0;
+let expenses = 0;
 
 form.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const description = document.getElementById("description").value.trim();
+  const description = document.getElementById("description").value;
   const amount = parseFloat(document.getElementById("amount").value);
   const date = document.getElementById("date").value;
   const type = document.getElementById("type").value;
 
-  if (!description || isNaN(amount) || !date) return;
+  if (!description || !amount || !date) return;
 
-  const transaction = {
-    id: Date.now(),
-    description,
-    amount,
-    date,
-    type
-  };
+  // Create table row
+  const row = document.createElement("tr");
 
-  transactions.push(transaction);
+  row.innerHTML = `
+    <td>${date}</td>
+    <td>${description}</td>
+    <td>${type}</td>
+    <td>$${amount.toFixed(2)}</td>
+    <td><button class="delete-btn">Delete</button></td>
+  `;
 
-  render();
+  table.appendChild(row);
+
+  // Update totals
+  if (type === "income") {
+    income += amount;
+  } else {
+    expenses += amount;
+  }
+
+  updateUI();
+
+  // Reset form
   form.reset();
+
+  // Delete button
+  row.querySelector(".delete-btn").addEventListener("click", function () {
+    row.remove();
+
+    if (type === "income") {
+      income -= amount;
+    } else {
+      expenses -= amount;
+    }
+
+    updateUI();
+  });
 });
 
-function deleteTransaction(id) {
-  transactions = transactions.filter(t => t.id !== id);
-  render();
-}
-
-function render() {
-  table.innerHTML = "";
-
-  let income = 0;
-  let expenses = 0;
-
-  transactions.forEach(t => {
-    if (t.type === "income") income += t.amount;
-    else expenses += t.amount;
-
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-      <td>${t.date}</td>
-      <td>${t.description}</td>
-      <td>${t.type}</td>
-      <td>$${t.amount.toFixed(2)}</td>
-      <td>
-        <button class="delete-btn" onclick="deleteTransaction(${t.id})">
-          Delete
-        </button>
-      </td>
-    `;
-
-    table.appendChild(row);
-  });
-
-  updateUI(income, expenses);
-}
-
-function updateUI(income, expenses) {
+function updateUI() {
   incomeEl.textContent = `$${income.toFixed(2)}`;
   expenseEl.textContent = `$${expenses.toFixed(2)}`;
   balanceEl.textContent = `$${(income - expenses).toFixed(2)}`;
 }
-
-// initial render
-render();
