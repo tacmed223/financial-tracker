@@ -21,6 +21,7 @@ body{
 
 h1{
     text-align:center;
+    margin-bottom:10px;
 }
 
 .summary{
@@ -44,7 +45,7 @@ form{
     display:grid;
     grid-template-columns:repeat(4,1fr);
     gap:10px;
-    margin-bottom:20px;
+    margin-bottom:15px;
 }
 
 input,select,button{
@@ -63,7 +64,6 @@ table{
     width:100%;
     border-collapse:collapse;
     background:#1e293b;
-    margin-top:10px;
 }
 
 th,td{
@@ -74,15 +74,6 @@ th,td{
 
 .delete-btn{
     background:red;
-    border:none;
-    padding:5px 10px;
-    color:white;
-    border-radius:5px;
-    cursor:pointer;
-}
-
-.edit-btn{
-    background:orange;
     border:none;
     padding:5px 10px;
     color:white;
@@ -112,14 +103,16 @@ th,td{
 </div>
 
 <form id="form">
-    <input id="desc" placeholder="Description">
-    <input id="amount" type="number" placeholder="Amount">
-    <input id="date" type="date">
+    <input id="desc" placeholder="Description" required>
+    <input id="amount" type="number" placeholder="Amount" required>
+    <input id="date" type="date" required>
+
     <select id="type">
         <option value="income">Income</option>
         <option value="expense">Expense</option>
     </select>
-    <button>Add</button>
+
+    <button>Add Transaction</button>
 </form>
 
 <input id="search" placeholder="Search transactions">
@@ -131,14 +124,92 @@ th,td{
 <th>Description</th>
 <th>Type</th>
 <th>Amount</th>
-<th>Actions</th>
+<th>Action</th>
 </tr>
 </thead>
+
 <tbody id="list"></tbody>
 </table>
 
 </div>
 
-<script src="script.js"></script>
+<script>
+let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
+const form = document.getElementById("form");
+const list = document.getElementById("list");
+
+const incomeEl = document.getElementById("income");
+const expenseEl = document.getElementById("expense");
+const balanceEl = document.getElementById("balance");
+const search = document.getElementById("search");
+
+function save(){
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+}
+
+function render(filter=""){
+    list.innerHTML = "";
+
+    let income = 0;
+    let expense = 0;
+
+    transactions
+    .filter(t => t.desc.toLowerCase().includes(filter.toLowerCase()))
+    .forEach((t,i)=>{
+
+        if(t.type === "income") income += t.amount;
+        else expense += t.amount;
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${t.date}</td>
+            <td>${t.desc}</td>
+            <td>${t.type}</td>
+            <td>$${t.amount.toFixed(2)}</td>
+            <td>
+                <button class="delete-btn" onclick="del(${i})">
+                    Delete
+                </button>
+            </td>
+        `;
+
+        list.appendChild(row);
+    });
+
+    incomeEl.textContent = "$" + income.toFixed(2);
+    expenseEl.textContent = "$" + expense.toFixed(2);
+    balanceEl.textContent = "$" + (income-expense).toFixed(2);
+
+    save();
+}
+
+form.addEventListener("submit", e=>{
+    e.preventDefault();
+
+    const desc = document.getElementById("desc").value;
+    const amount = parseFloat(document.getElementById("amount").value);
+    const date = document.getElementById("date").value;
+    const type = document.getElementById("type").value;
+
+    transactions.push({desc, amount, date, type});
+
+    form.reset();
+    render();
+});
+
+function del(i){
+    transactions.splice(i,1);
+    render();
+}
+
+search.addEventListener("input", e=>{
+    render(e.target.value);
+});
+
+render();
+</script>
+
 </body>
 </html>
