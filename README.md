@@ -1,236 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Financial Tracker Pro</title>
+💰 Financial Tracker Pro
 
-<style>
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:#0f172a;
-    color:white;
-    padding:20px;
-}
+A simple, modern, browser-based financial tracker that helps you manage income, expenses, and balances in real time.
 
-.container{
-    max-width:900px;
-    margin:auto;
-}
+⸻
 
-h1{
-    text-align:center;
-    margin-bottom:20px;
-}
+🚀 Features
 
-/* Summary cards */
-.summary{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:10px;
-    margin-bottom:20px;
-}
+* ➕ Add income and expense transactions
+* 🗑️ Delete transactions
+* 🔍 Search transactions
+* 💾 Saves data in browser (localStorage)
+* 📊 Automatic balance calculation
+* 📱 Mobile-friendly design
 
-.card{
-    padding:15px;
-    border-radius:10px;
-    text-align:center;
-}
+⸻
 
-.income{background:#16a34a;}
-.expense{background:#dc2626;}
-.balance{background:#2563eb;}
+🖥️ How to Use
 
-/* Form */
-form{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:10px;
-    margin-bottom:15px;
-}
+1. Open the website
+2. Enter a description (e.g. Salary, Food, Rent)
+3. Enter an amount
+4. Select date
+5. Choose Income or Expense
+6. Click Add Transaction
+7. View your updated balance instantly
 
-input,select,button{
-    padding:10px;
-    border:none;
-    border-radius:8px;
-}
+⸻
 
-button{
-    background:#2563eb;
-    color:white;
-    cursor:pointer;
-}
+📦 Tech Stack
 
-/* Table */
-table{
-    width:100%;
-    border-collapse:collapse;
-    background:#1e293b;
-}
-
-th,td{
-    padding:10px;
-    text-align:center;
-    border-bottom:1px solid #334155;
-}
-
-.delete-btn{
-    background:red;
-    border:none;
-    padding:5px 10px;
-    color:white;
-    border-radius:5px;
-    cursor:pointer;
-}
-
-/* Search */
-#search{
-    width:100%;
-    margin-bottom:10px;
-    padding:10px;
-    border-radius:8px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<h1>💰 Financial Tracker Pro</h1>
-
-<!-- SUMMARY -->
-<div class="summary">
-    <div class="card income">
-        Income <h2 id="income">$0</h2>
-    </div>
-
-    <div class="card expense">
-        Expense <h2 id="expense">$0</h2>
-    </div>
-
-    <div class="card balance">
-        Balance <h2 id="balance">$0</h2>
-    </div>
-</div>
-
-<!-- FORM -->
-<form id="form">
-    <input id="desc" placeholder="Description" required>
-    <input id="amount" type="number" placeholder="Amount" required>
-    <input id="date" type="date" required>
-
-    <select id="type">
-        <option value="income">Income</option>
-        <option value="expense">Expense</option>
-    </select>
-
-    <button type="submit">Add Transaction</button>
-</form>
-
-<!-- SEARCH -->
-<input id="search" placeholder="Search transactions">
-
-<!-- TABLE -->
-<table>
-<thead>
-<tr>
-<th>Date</th>
-<th>Description</th>
-<th>Type</th>
-<th>Amount</th>
-<th>Action</th>
-</tr>
-</thead>
-
-<tbody id="list"></tbody>
-</table>
-
-</div>
-
-<script>
-let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
-
-const form = document.getElementById("form");
-const list = document.getElementById("list");
-
-const incomeEl = document.getElementById("income");
-const expenseEl = document.getElementById("expense");
-const balanceEl = document.getElementById("balance");
-const search = document.getElementById("search");
-
-function save(){
-    localStorage.setItem("transactions", JSON.stringify(transactions));
-}
-
-function render(filter=""){
-    list.innerHTML = "";
-
-    let income = 0;
-    let expense = 0;
-
-    transactions
-    .filter(t => t.desc.toLowerCase().includes(filter.toLowerCase()))
-    .forEach((t,i)=>{
-
-        if(t.type === "income") income += t.amount;
-        else expense += t.amount;
-
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-            <td>${t.date}</td>
-            <td>${t.desc}</td>
-            <td>${t.type}</td>
-            <td>$${t.amount.toFixed(2)}</td>
-            <td>
-                <button class="delete-btn" onclick="del(${i})">
-                    Delete
-                </button>
-            </td>
-        `;
-
-        list.appendChild(row);
-    });
-
-    incomeEl.textContent = "$" + income.toFixed(2);
-    expenseEl.textContent = "$" + expense.toFixed(2);
-    balanceEl.textContent = "$" + (income-expense).toFixed(2);
-
-    save();
-}
-
-form.addEventListener("submit", e=>{
-    e.preventDefault();
-
-    const desc = document.getElementById("desc").value;
-    const amount = parseFloat(document.getElementById("amount").value);
-    const date = document.getElementById("date").value;
-    const type = document.getElementById("type").value;
-
-    transactions.push({
-        desc,
-        amount,
-        date,
-        type
-    });
-
-    form.reset();
-    render();
-});
-
-function del(i){
-    transactions.splice(i,1);
-    render();
-}
-
-search.addEventListener("input", e=>{
-    render(e.target.value);
-});
-
-render();
-</script>
-
-</body>
-</html>
+* HTML
+* CSS
+* JavaScript (Vanilla)
+* localStorage (for saving data
