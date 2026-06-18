@@ -8,7 +8,7 @@
 <style>
 body{
     margin:0;
-    font-family:Arial;
+    font-family:Arial, sans-serif;
     background:#0f172a;
     color:white;
     padding:20px;
@@ -21,14 +21,15 @@ body{
 
 h1{
     text-align:center;
-    margin-bottom:10px;
+    margin-bottom:20px;
 }
 
+/* Summary cards */
 .summary{
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:10px;
-    margin:20px 0;
+    margin-bottom:20px;
 }
 
 .card{
@@ -41,6 +42,7 @@ h1{
 .expense{background:#dc2626;}
 .balance{background:#2563eb;}
 
+/* Form */
 form{
     display:grid;
     grid-template-columns:repeat(4,1fr);
@@ -60,6 +62,7 @@ button{
     cursor:pointer;
 }
 
+/* Table */
 table{
     width:100%;
     border-collapse:collapse;
@@ -81,6 +84,7 @@ th,td{
     cursor:pointer;
 }
 
+/* Search */
 #search{
     width:100%;
     margin-bottom:10px;
@@ -96,12 +100,22 @@ th,td{
 
 <h1>💰 Financial Tracker Pro</h1>
 
+<!-- SUMMARY -->
 <div class="summary">
-    <div class="card income">Income <h2 id="income">$0</h2></div>
-    <div class="card expense">Expense <h2 id="expense">$0</h2></div>
-    <div class="card balance">Balance <h2 id="balance">$0</h2></div>
+    <div class="card income">
+        Income <h2 id="income">$0</h2>
+    </div>
+
+    <div class="card expense">
+        Expense <h2 id="expense">$0</h2>
+    </div>
+
+    <div class="card balance">
+        Balance <h2 id="balance">$0</h2>
+    </div>
 </div>
 
+<!-- FORM -->
 <form id="form">
     <input id="desc" placeholder="Description" required>
     <input id="amount" type="number" placeholder="Amount" required>
@@ -112,11 +126,13 @@ th,td{
         <option value="expense">Expense</option>
     </select>
 
-    <button>Add Transaction</button>
+    <button type="submit">Add Transaction</button>
 </form>
 
+<!-- SEARCH -->
 <input id="search" placeholder="Search transactions">
 
+<!-- TABLE -->
 <table>
 <thead>
 <tr>
@@ -193,7 +209,12 @@ form.addEventListener("submit", e=>{
     const date = document.getElementById("date").value;
     const type = document.getElementById("type").value;
 
-    transactions.push({desc, amount, date, type});
+    transactions.push({
+        desc,
+        amount,
+        date,
+        type
+    });
 
     form.reset();
     render();
